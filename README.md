@@ -15,6 +15,7 @@
 
 
 3.2 Property information
+
 	The database should record information about Users, properties, prices, and
 	booking.
 	• Property: The main asset of the real estate agency are properties.
