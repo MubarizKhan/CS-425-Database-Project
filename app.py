@@ -36,14 +36,21 @@ def index():
 @app.route('/dummy')
 def dummy():
   id_ = session['user_id']
-  return render_template('dummy.html')
+  if session['user_type']:
+    if session['user_type'] == "agent":
+      return render_template('dummy.html')
+    else:
+      return render_template('buyer_index.html')
 
+@app.route('/buyer_index')
+def buyer_index():
+  return render_template('buyer_index.html')
 
 @app.route('/login')
 def login():
     return render_template('login.html')
 
-
+# ')
 # @app.route('logout')
 # def logout():
 #   return render_template('index.html')
