@@ -40,4 +40,18 @@
     </div>
   </div>
 </div>
+
+<h1>{% block title %} Agents {% endblock %}</h1>
+    {% for book in agents %}
+        <div class='book'>
+            <h3> {{ book[0] }} - {{ book[1] }} BY {{ book[2] }} - {{ book[3] }} - {{ book[4] }} - {{ book[5] }}- {{ book[6] }} </h3>
+            <h3> <p>({{ book }} pages)</p></h3>
+
+        </div>
+    {% endfor %}
+
+
 {% endblock %}
+
+
+
