@@ -26,11 +26,11 @@ cur = conn.cursor()
 
 cur.execute('INSERT INTO "User" (User_ID, Name ,Email ,UserType ,Password)'
 'VALUES( %s,%s,%s,%s,%s )',
-(4,'test','test@gmail.com','agent','test@123'))
+(5,'test','testq@gmail.com','agent','test@123'))
 
 cur.execute('INSERT INTO "agents" (agent_id,user_id ,job_title ,real_estate_agency,contact_information,email)'
             'VALUES(%s,%s,%s,%s,%s,%s)',
-            (4,'4','agent','test_agency','811111','test@gmail.com'))
+            (5,'5','agent','test_agency','811111','teqst@gmail.com'))
 
 
 
