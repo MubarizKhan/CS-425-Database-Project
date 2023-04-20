@@ -2,6 +2,8 @@ import os
 import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+import random
+
 
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 app.config['SECRET_KEY'] = 'mysecretkey'
@@ -31,10 +33,20 @@ def index():
 # def dummy():
 #   return render_template('dummy.html')
 
+@app.route('/dummy')
+def dummy():
+  id_ = session['user_id']
+  return render_template('dummy.html')
+
 
 @app.route('/login')
 def login():
     return render_template('login.html')
+
+
+# @app.route('logout')
+# def logout():
+#   return render_template('index.html')
 
 @app.route('/signup')
 def signup():
@@ -65,6 +77,10 @@ def login_post():
     #     flash('Invalid email or password.')
     #     return redirect(url_for('login'))
 
+    if session['user_id']:
+      if session['user_id']== user[0]:
+        return redirect(url_for('dummy'))
+
     session.clear()
     session['user_id'] = user[0]
     session['user_type'] = user[4]
@@ -81,7 +97,7 @@ def login_post():
 
 
 
-import random
+
 @app.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form['email']
@@ -127,7 +143,6 @@ def signup_post():
 
     conn.commit()
     return redirect(url_for('index'))
-# a@a.com
 
 @app.route('/logout')
 def logout():
