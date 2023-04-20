@@ -25,3 +25,7 @@ def index():
     cur.close()
     conn.close()
     return render_template('index.html', books=books)
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
