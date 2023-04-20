@@ -57,7 +57,7 @@ def login_post():
         flash('Invalid email or password.')
     else:
       flash('user logged in')
-      redirect('/')
+
 
     # user_id, password_hash = user
 
@@ -76,6 +76,8 @@ def login_post():
 
 
     print(session['user_id'], "session[user_id]")
+    # redirect('/')
+    return render_template('index.html')
 
 
 
@@ -86,11 +88,14 @@ def signup_post():
     name = request.form['name']
     password = request.form['password']
     user_type = request.form['user_type']
+
     user_id = random.randint(0,123)
+    gen_id = random.randint(0,123)
 
     print('-------')
-    print(email, password, user_type)
+    print(name, email, password, type(user_type), user_type)
     print('======')
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -105,23 +110,24 @@ def signup_post():
     # password_hash = generate_password_hash(password)
 
     cur.execute('INSERT INTO "User" (user_id, name, email, password, usertype) VALUES (%s, %s, %s, %s, %s)', (user_id, name, email, password, user_type))
-    conn.commit()
 
-    # if usertype == 'agent':
-      # cur.execute('INSERT INTO "User" (user_id, name, email, password, usertype) VALUES (%s, %s, %s, %s, %s)', (user_id, name, email, password, user_type))
-    # else:
-      # cur.execute('INSERT INTO "User" (user_id, name, email, password, usertype) VALUES (%s, %s, %s, %s, %s)', (user_id, name, email, password, user_type))
 
-    cur.execute('SELECT id FROM "User" WHERE email = %s', (email,))
+    if str(user_type) == "agent":
+      real_estate_agency = request.form['real_estate_agency']
+      contact_info = request.form['contact_information']
+      cur.execute('INSERT INTO agents (agent_id, user_id, job_title, real_estate_agency, contact_information, email) VALUES (%s, %s, %s, %s, %s, %s)', (gen_id, user_id, user_type, real_estate_agency, contact_info, email))
+    else:
+      cur.execute('INSERT INTO renters (renter_id, user_id, email) VALUES (%s, %s, %s)', (gen_id, user_id, email))
+
+    cur.execute('SELECT user_id FROM "User" WHERE email = %s', (email,))
     user_id = cur.fetchone()[0]
-
-    i
 
     session.clear()
     session['user_id'] = user_id
+
+    conn.commit()
     return redirect(url_for('index'))
-
-
+# a@a.com
 
 @app.route('/logout')
 def logout():
@@ -133,3 +139,5 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+

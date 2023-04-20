@@ -15,17 +15,29 @@
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
 
-    <label for="name">Name:</label>
-    <input type="name" id="name" name="name" required>
+    <label for="name"> Name:</label>
+    <input type="text" id="name" name="name" required>
+
 
     <label for="password">Password:</label>
     <input type="password" id="password" name="password" required>
+
+    <h1> if agent </h1>
+
+    <label for="contact_information">contact_information:</label>
+    <input type="text" id="contact_information" name="contact_information">
+
+
+    <label for="real_estate_agency">real_estate_agency:</label>
+    <input type="text" id="real_estate_agency" name="real_estate_agency"  >
+
 
     <label for="user_type">User Type:</label>
     <select id="user_type" name="user_type" required>
       <option value="agent">agent</option>
       <option value="renter">renter</option>
     </select>
+
     <button type="submit">Signup</button>
   </form>
 {% endblock %}

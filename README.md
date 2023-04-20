@@ -102,3 +102,14 @@ GRANT ALL PRIVILEGES ON DATABASE flask_db TO sammy;
 export DB_USERNAME="sammy"
 export DB_PASSWORD="password"
 
+
+test2=# -- Remove the NOT NULL constraint on the "name" column in the "renters" table
+ALTER TABLE renters ALTER COLUMN order_date DROP NOT NULL;
+ALTER TABLE
+test2=# -- Remove the NOT NULL constraint on the "name" column in the "renters" table
+ALTER TABLE renters ALTER COLUMN delivery_id DROP NOT NULL;
+ALTER TABLE
+test2=# -- Remove the NOT NULL constraint on the "name" column in the "renters" table
+ALTER TABLE renters ALTER COLUMN rental_preferences DROP NOT NULL;
+ALTER TABLE
+
