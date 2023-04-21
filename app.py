@@ -35,12 +35,8 @@ def index():
 
 @app.route('/dummy')
 def dummy():
-  id_ = session['user_id']
-  if session['user_type']:
-    if session['user_type'] == "agent":
-      return render_template('dummy.html')
-    else:
-      return render_template('buyer_index.html')
+  return render_template('dummy.html')
+
 
 @app.route('/buyer_index')
 def buyer_index():
@@ -71,11 +67,20 @@ def login_post():
     user = cur.fetchone()
 
     if user is None:
-        flash(email, password_hash)
-        flash('true')
-        flash('Invalid email or password.')
+      flash('Invalid email or password.')
+      return redirect('/login')
+
     else:
-      flash('user logged in')
+      if session.get('user_id') and session['user_id'] == user[0]:
+        return redirect(url_for('signup'))
+
+      else:
+        session.clear()
+        session['user_id'] = user[0]
+        session['user_type'] = user[4]
+        flash('Already logged in')
+        return redirect(url_for('index'))
+
 
 
     # user_id, password_hash = user
@@ -84,25 +89,15 @@ def login_post():
     #     flash('Invalid email or password.')
     #     return redirect(url_for('login'))
 
-    if session['user_id']:
-      if session['user_id']== user[0]:
-        return redirect(url_for('dummy'))
+    # session.clear()
+    # session['user_id'] = user[0]
+    # session['user_type'] = user[4]
 
-    session.clear()
-    session['user_id'] = user[0]
-    session['user_type'] = user[4]
+    # print('(((((((' * 10)
+    # print(user)
+    # print(')))))' * 10)
 
-
-    print('(((((((' * 10)
-    print(user)
-    print(')))))' * 10)
-
-
-    print(session['user_id'], "session[user_id]")
-    # redirect('/')
-    return render_template('index.html')
-
-
+    # return redirect(url_for('index'))
 
 
 @app.route('/signup', methods=['POST'])
