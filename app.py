@@ -153,10 +153,39 @@ def add_property():
   return render_template('add_property.html')
   # return redirect(url_for('add_property'))
 
+# @app.route('/add_property',  methods=['POST'])
+@app.route('/add_property/', methods=['POST'])
+def insert_property():
+
+  print('heyyyyyyyyyyyyyyyyyyyy')
+  # print(request.form)
+  type = request.form['type']
+  location = request.form['location']
+  # city = request.form['city']
+  # state = request.form['state']
+  # description = request.form['description']
+  # price = request.form['price']
+  available = request.form['available']
+  neighborhood_id = request.form['neighborhood_id']
+  agent_id = request.form['agent_id']
+
+  print(type, location, available, agent_id, neighborhood_id)
+  # print('we here')
+
+
+
+  # name = request.form['name']
+  # password = request.form['password']
+  # user_type = request.form['user_type']
+  # return render_template('index.html')
+  return redirect(url_for('index'))
+
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
+
+
 
 
 
