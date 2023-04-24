@@ -72,7 +72,7 @@ def login_post():
 
     else:
       if session.get('user_id') and session['user_id'] == user[0]:
-        return redirect(url_for('signup'))
+        return redirect(url_for('dummy'))
 
       else:
         session.clear()
@@ -145,6 +145,13 @@ def signup_post():
 
     conn.commit()
     return redirect(url_for('index'))
+
+
+@app.route('/add_property')
+def add_property():
+  print('*L' * 10)
+  return render_template('add_property.html')
+  # return redirect(url_for('add_property'))
 
 @app.route('/logout')
 def logout():
