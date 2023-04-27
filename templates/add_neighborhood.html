@@ -1,0 +1,35 @@
+{% extends 'agent_layout.html' %}
+
+{% block content %}
+  <h1>Signup</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+
+    <h1> Add neighborhood </h1>
+
+
+    <label for="crime_rate">crime_rate:</label>
+    <input type="text" id="crime_rate" name="crime_rate">
+
+    <label for="state">state:</label>
+    <input type="text" id="state" name="state">
+
+    <label for="city">city:</label>
+    <input type="text" id="city" name="city">
+
+    <label for="location">location:</label>
+    <input type="text" id="location" name="location">
+
+
+    <button type="submit">Signup</button>
+  </form>
+{% endblock %}

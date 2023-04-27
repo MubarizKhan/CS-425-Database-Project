@@ -123,6 +123,8 @@ def signup_post():
     return redirect(url_for('index'))
 
 
+# Properties
+
 @app.route('/add_property')
 def add_property():
   print('*L' * 10)
@@ -163,7 +165,39 @@ def insert_property():
     finally:
         cur.close()
 
-    return redirect(url_for('index'))
+    return redirect(url_for('agent_layout'))
+
+  #Add neighborhood
+
+@app.route('/add_neighborhood')
+def add_neighborhood():
+  return render_template('add_neighborhood.html')
+
+@app.route('/add_neighborhood', methods=['POST'])
+def insert_neighborhood():
+
+  print('beeeeeeeeeeeeeeeeeeeeeen dpwwwwwwwwwwwwn')
+  conn = get_db_connection()
+  cur = conn.cursor()
+  if request.method == 'POST':
+        crime_rate = request.form['crime_rate']
+        state = request.form['state']
+        city = request.form['city']
+        location = request.form['location']
+
+        try:
+            cur.execute("INSERT INTO neighborhood (crime_rate, state, city, location) VALUES (%s, %s, %s, %s)", (crime_rate, state, city, location))
+            conn.commit()
+            flash('Neighborhood added successfully!', 'success')
+            return redirect(url_for('add_neighborhood'))
+        except Exception as e:
+            conn.rollback()
+            flash('Error occurred while adding neighborhood', 'error')
+            print(str(e))
+
+  return render_template('add_neighborhood.html')
+
+
 
 
 @app.route('/logout')
