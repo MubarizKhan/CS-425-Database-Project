@@ -423,6 +423,61 @@ def delete_address(address_id):
   # return redirect(url_for('show_addresses'))
   return redirect(url_for('renter_profile'))
 
+@app.route('/add_credit_card', methods=['GET', 'POST'])
+def add_credit_card():
+  conn = get_db_connection()
+  cur = conn.cursor()
+  # cur.execute('SELECT * FROM address WHERE user_id=%s', (session['user_id']))
+  cur.execute('SELECT * FROM address WHERE user_id=%s', (session['user_id'],))
+
+
+  addresses = cur.fetchall()
+
+  if request.method == 'POST':
+        print('we in add_credit_card_post', request.form['paymentaddress_id'][0])
+        # Get the credit card details from the form
+        card_number = request.form['cardnumber']
+        expiration_date = request.form['expirationdate']
+        cvv = request.form['cvv']
+
+        # Get the payment address ID from the database for the renter
+        cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'],))
+        renter_id = cur.fetchone()
+
+        # cur.execute('SELECT paymentaddress_id FROM renters WHERE renter_id = %s', (session['user_id'],))
+        payment_address_id = request.form['paymentaddress_id'][0] #cur.fetchone()[0]
+        print('we in add_credit_card_post@', payment_address_id, cvv, expiration_date)
+
+        # Insert the credit card details into the database
+        cur.execute('INSERT INTO creditcard (renter_id, cardnumber, expirationdate, paymentaddress_id, cvv) VALUES (%s, %s, %s, %s, %s)', (renter_id, card_number, expiration_date, payment_address_id, cvv))
+        conn.commit()
+        conn.close()
+
+        flash('Credit card added successfully!', 'success')
+        return redirect(url_for('renter_profile'))
+
+  else:
+      return render_template('add_creditcard.html', addresses=addresses)
+
+  # if request.method == 'POST':
+  #   renter_id = db.session.query(Renter.renter_id).filter_by(user_id=session['user_id']).scalar()
+  #   cardnumber = request.form['cardnumber']
+  #   expirationdate = request.form['expirationdate']
+  #   cvv = request.form['cvv']
+  #   paymentaddress_id = request.form['paymentaddress']
+
+  #   credit_card = CreditCard(renter_id=renter_id, cardnumber=cardnumber, expirationdate=expirationdate, cvv=cvv, paymentaddress_id=paymentaddress_id)
+
+  #   db.session.add(credit_card)
+  #   db.session.commit()
+
+  #   flash('Credit card added successfully')
+  #   return redirect(url_for('renter_profile'))
+
+  # addresses = Address.query.filter_by(user_id=session['user_id']).all()
+  # return render_template('add_credit_card.html', addresses=addresses)
+
+
 @app.route('/logout')
 def logout():
     session.clear()
