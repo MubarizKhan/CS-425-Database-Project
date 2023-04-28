@@ -326,7 +326,7 @@ def insert_neighborhood():
 ############################ ##############
 ##########################################
 ##########################################
-############## Property ###################
+############## Addressess ###################
 ############## ############################
 ##########################################
 ##########################################
@@ -370,7 +370,58 @@ def renter_insert_address():
     # Redirect to the user's profile page
     return redirect(url_for('renter_add_address'))
 
+@app.route('/all_renters_addresses', methods=['GET', 'POST'])
+def all_renters_addresses():
+  conn = get_db_connection()
+  cur = conn.cursor()
+  # Get all addresses belonging to the current user
+  cur.execute('SELECT * FROM address WHERE user_id=%s', (session['user_id'],))
+  addresses = cur.fetchall()
 
+  conn.close()
+
+  return render_template('all_renters_addresses.html', addresses=addresses)
+
+@app.route('/modify_address/<int:address_id>', methods=['GET', 'POST'])
+def modify_address(address_id):
+  conn = get_db_connection()
+  cur = conn.cursor()
+  # Get the address associated with the given address_id
+  cur.execute('SELECT * FROM address WHERE address_id=%s AND user_id=%s', (address_id, session['user_id']))
+  address = cur.fetchone()
+  # If the address doesn't exist or doesn't belong to the current user, redirect to the home page
+  if not address:
+      conn.close()
+      flash('Address not found.', 'error')
+      return redirect(url_for('home'))
+
+  if request.method == 'POST':
+      # Update the address in the database
+      new_address = request.form['address']
+      new_city = request.form['city']
+      new_state = request.form['state']
+      new_zip_code = request.form['zip_code']
+      cur.execute('UPDATE address SET address=%s, city=%s, state=%s, zip_code=%s WHERE address_id=%s',
+                  (new_address, new_city, new_state, new_zip_code, address_id))
+      conn.commit()
+      flash('Address updated successfully!', 'success')
+      conn.close()
+      return redirect(url_for('renter_profile'))
+  conn.close()
+
+  return render_template('modify_address.html', address=address)
+
+
+@app.route('/delete_address/<int:address_id>', methods=['GET', 'POST'])
+def delete_address(address_id):
+  conn = get_db_connection()
+  cur = conn.cursor()
+  cur.execute('DELETE FROM address WHERE address_id = %s', (address_id,))
+  conn.commit()
+  flash('Address deleted successfully!', 'success')
+  conn.close()
+  # return redirect(url_for('show_addresses'))
+  return redirect(url_for('renter_profile'))
 
 @app.route('/logout')
 def logout():

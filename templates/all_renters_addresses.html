@@ -1,0 +1,30 @@
+{% extends 'renter_view.html' %}
+
+{% block content %}
+  <h1>All Addresses</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Address</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip Code</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for address in addresses %}
+        <tr>
+          <td>{{ address[2] }}</td>
+          <td>{{ address[4] }}</td>
+          <td>{{ address[3] }}</td>
+          <td>{{ address[5] }}</td>
+          <td>
+            <a href="{{ url_for('modify_address', address_id=address[0]) }}">modify_address</a>
+
+            <a href="{{ url_for('delete_address', address_id=address[0]) }}">Delete</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}
