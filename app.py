@@ -234,6 +234,47 @@ def modify_property(id):
               print(str(e))
     return render_template('modify_property.html')
 
+@app.route('/delete_property/<int:id>', methods=['get'])
+def delete_property(id):
+
+  print(' weeeeeeeeeeeeee deleting', session['user_id'])
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  # Check if the property's agent_id matches the id of the current user
+  cur.execute('SELECT agent_id FROM property WHERE property_id=%s', (id,))
+  result = cur.fetchone()
+  print(result[0])
+  print(result, 'this is result' * 5)
+  print(result[0], session['user_id'])
+
+
+  # ""
+  # dummy_id = result[0]
+  cur.execute('SELECT user_id,agent_id FROM agents WHERE agent_id=%s', (result[0],))
+  session_user_id = cur.fetchone()
+  print(session_user_id, 'TTHIS IS SESSION USER' * 2)
+
+  if not session_user_id or session_user_id[0] != session['user_id']:
+      flash('You are not authorized to delete this property.', 'error')
+      return redirect(url_for('dummy'))
+  try:
+      # Delete the property from the database
+      cur.execute('DELETE FROM property WHERE property_id=%s', (id,))
+      conn.commit()
+      flash('Property deleted successfully!', 'success')
+  except Exception as e:
+      conn.rollback()
+      flash('Error occurred while deleting property', 'error')
+      print(str(e))
+  finally:
+      conn.close()
+  # return redirect(url_for('home'))
+  return render_template('property_index.html')
+
+
+
+
   #Add neighborhood
 
 @app.route('/add_neighborhood')
