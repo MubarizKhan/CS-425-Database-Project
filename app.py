@@ -200,6 +200,40 @@ def insert_property():
 
     return redirect(url_for('agent_layout'))
 
+
+@app.route('/modify_property/<int:id>', methods=['GET', 'POST'])
+def modify_property(id):
+    # Your code here
+    print('its hitting' * 10)
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM property WHERE property_id = %s", (id,))
+    property_data = cur.fetchone()
+
+    if request.method == 'POST':
+          property_type = request.form['type']
+          location = request.form['location']
+          agent_id = id
+          city = request.form['city']
+          state = request.form['state']
+          description = request.form['description']
+          price = request.form['price']
+          availability = request.form['availability']
+          neighborhood_id = request.form['neighborhood_id']
+
+          try:
+
+              cur.execute("UPDATE property SET type = %s, location = %s, agent_id = %s, city = %s, state = %s, description = %s, price = %s, availability = %s, neighborhood_id = %s WHERE property_id = %s", (property_type, location, agent_id, city, state, description, price, availability, neighborhood_id, id))
+              conn.commit()
+              flash('Property modified successfully!', 'success')
+              return redirect(url_for('modify_property'))
+          except Exception as e:
+              conn.rollback()
+              flash('Error occurred while modifying property', 'error')
+              print(str(e))
+    return render_template('modify_property.html')
+
   #Add neighborhood
 
 @app.route('/add_neighborhood')
@@ -232,11 +266,7 @@ def insert_neighborhood():
 
 
 # @app.route('/propety_index', methods=['get'])
-@app.route('/modify_property/<int:id>', methods=['GET', 'POST'])
-def modify_property(id):
-    # Your code here
-    print('its hitting' * 10)
-    return render_template('modify_property.html')
+
 
 
 
