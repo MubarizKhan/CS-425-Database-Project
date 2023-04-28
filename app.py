@@ -37,7 +37,12 @@ def dummy():
 
 @app.route('/buyer_index')
 def buyer_index():
+
+
   return render_template('buyer_index.html')
+@app.route('/agent_layout')
+def agent_layout():
+  return render_template('agent_layout.html')
 
 @app.route('/login')
 def login():
@@ -64,7 +69,7 @@ def login_post():
 
     else:
       if session.get('user_id') and session['user_id'] == user[0]:
-        return redirect(url_for('dummy'))
+        return redirect(url_for('agent_layout'))
 
       else:
         session.clear()
@@ -123,7 +128,35 @@ def signup_post():
     return redirect(url_for('index'))
 
 
-# Properties
+############################ ##############
+##########################################
+##########################################
+############## Property ###################
+############## ############################
+##########################################
+##########################################
+##########################################
+
+def show_properties():
+  conn = get_db_connection()
+    # psycopg2.connect(database='your_database_name', user='your_database_user', password='your_database_password', host='localhost', port='5432')
+  cur = conn.cursor()
+  cur.execute('SELECT * FROM property')
+  properties = cur.fetchall()
+  print(properties)
+  conn.close()
+
+  return properties
+
+
+@app.route('/property_index')
+def property_index():
+    print('in proooooooooooooppppppppppppppertieeeeeeeeeeesssssssss')
+    properties = show_properties()
+    return render_template('property_index.html', properties=properties)
+    # return render_template('property_index.html')
+
+
 
 @app.route('/add_property')
 def add_property():
@@ -196,6 +229,19 @@ def insert_neighborhood():
             print(str(e))
 
   return render_template('add_neighborhood.html')
+
+
+# @app.route('/propety_index', methods=['get'])
+# def properties():
+    # print('in proooooooooooooppppppppppppppertieeeeeeeeeeesssssssss')
+    # conn = get_db_connection()
+    # # psycopg2.connect(database='your_database_name', user='your_database_user', password='your_database_password', host='localhost', port='5432')
+    # cur = conn.cursor()
+    # cur.execute('SELECT * FROM property')
+    # properties = cur.fetchall()
+    # conn.close()
+    # return render_template('property_index.html', properties=properties)
+
 
 
 

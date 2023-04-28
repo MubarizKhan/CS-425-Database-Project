@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>All Properties</h1>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Location</th>
+      <th>Agent ID</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Availability</th>
+      <th>Neighborhood ID</th>
+    </tr>
+    {% for property in properties %}
+      <tr>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+        <td>{{ property[0] }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+
+{% endblock %}
