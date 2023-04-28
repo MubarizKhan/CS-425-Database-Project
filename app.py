@@ -37,6 +37,9 @@ def dummy():
 
 @app.route('/buyer_index')
 def buyer_index():
+  print('in buyer index')
+  properties = show_properties()
+  return render_template('buyer_index.html', properties=properties)
 
 
   return render_template('buyer_index.html')
@@ -68,15 +71,18 @@ def login_post():
       return redirect('/login')
 
     else:
-      if session.get('user_id') and session['user_id'] == user[0]:
-        return redirect(url_for('agent_layout'))
+      session['user_id'] = user[0]
+      session['user_type'] = user[4]
+      if session.get('user_id') and session['user_id'] == user[0] and session['user_type'] == 'agent':
+        return redirect(url_for('property_index'))
 
       else:
-        session.clear()
-        session['user_id'] = user[0]
-        session['user_type'] = user[4]
-        flash('Already logged in')
-        return redirect(url_for('index'))
+        return redirect(url_for('buyer_index'))
+        # session.clear()
+        # session['user_id'] = user[0]
+        # session['user_type'] = user[4]
+        # flash('Already logged in')
+        # return redirect(url_for('index'))
 
 
 
@@ -127,7 +133,14 @@ def signup_post():
     conn.commit()
     return redirect(url_for('index'))
 
-
+############################ ##############
+##########################################
+##########################################
+############## AGENTS ###################
+############## ############################
+##########################################
+##########################################
+##########################################
 ############################ ##############
 ##########################################
 ##########################################
@@ -154,7 +167,6 @@ def property_index():
     print('in proooooooooooooppppppppppppppertieeeeeeeeeeesssssssss')
     properties = show_properties()
     return render_template('property_index.html', properties=properties)
-    # return render_template('property_index.html')
 
 
 
@@ -163,7 +175,6 @@ def add_property():
   print('*L' * 10)
   return render_template('add_property.html')
 
-# @app.route('/add_property',  methods=['POST'])
 @app.route('/add_property', methods=['POST'])
 def insert_property():
 
@@ -249,8 +260,6 @@ def delete_property(id):
   print(result[0], session['user_id'])
 
 
-  # ""
-  # dummy_id = result[0]
   cur.execute('SELECT user_id,agent_id FROM agents WHERE agent_id=%s', (result[0],))
   session_user_id = cur.fetchone()
   print(session_user_id, 'TTHIS IS SESSION USER' * 2)
@@ -306,7 +315,22 @@ def insert_neighborhood():
   return render_template('add_neighborhood.html')
 
 
-# @app.route('/propety_index', methods=['get'])
+############################ ##############
+##########################################
+##########################################
+############## RENTERS ###################
+############## ############################
+##########################################
+##########################################
+##########################################
+############################ ##############
+##########################################
+##########################################
+############## Property ###################
+############## ############################
+##########################################
+##########################################
+##########################################
 
 
 

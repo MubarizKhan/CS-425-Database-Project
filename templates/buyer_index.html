@@ -1,67 +1,39 @@
-{% extends 'base.html' %}
+{% extends 'renter_view.html' %}
+
 
 {% block content %}
+  <h1>All Propertie!!s</h1>
+  <table>
+    <tr>
+      <th>ID</th>
+      <th>Type</th>
+      <th>Location</th>
+      <th>Agent ID</th>
+      <th>City</th>
+      <th>State</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Availability</th>
+      <th>Neighborhood ID</th>
+      <th>Delete</th>
 
-<section id="services" class="services">
-  <div class="container" data-aos="fade-up">
+    </tr>
+    {% for property in properties %}
+      <tr>
+        <td><a href="{{ url_for('modify_property', id=property[0]) }}">{{ property[0] }}</a></td>
+        <td>{{ property[1] }}</td>
+        <td>{{ property[2] }}</td>
+        <td>{{ property[3] }}</td>
+        <td>{{ property[4] }}</td>
+        <td>{{ property[5] }}</td>
+        <td>{{ property[6] }}</td>
+        <td>{{ property[7] }}</td>
+        <td>{{ property[8] }}</td>
+        <td>{{ property[9] }}</td>
+        <td><a href="{{ url_for('delete_property', id=property[0]) }}">{{ property[0] }}</a></td>
+      </tr>
+    {% endfor %}
+  </table>
 
-    <div class="section-title">
-      <h2>Properties</h2>
-      <p>Check out Properties for booking</p>
-    </div>
-
-    <div class="row">
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch" data-aos="zoom-in" data-aos-delay="100">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bxl-dribbble"></i></div>
-          <h4><a href="">Lorem Ipsum</a></h4>
-          <p>Voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi</p>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-md-0" data-aos="zoom-in" data-aos-delay="200">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bx-file"></i></div>
-          <h4><a href="">Sed ut perspiciatis</a></h4>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore</p>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4 mt-lg-0" data-aos="zoom-in" data-aos-delay="300">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bx-tachometer"></i></div>
-          <h4><a href="">Magni Dolores</a></h4>
-          <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia</p>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="100">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bx-world"></i></div>
-          <h4><a href="">Nemo Enim</a></h4>
-          <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis</p>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="200">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bx-slideshow"></i></div>
-          <h4><a href="">Dele cardo</a></h4>
-          <p>Quis consequatur saepe eligendi voluptatem consequatur dolor consequuntur</p>
-        </div>
-      </div>
-
-      <div class="col-lg-4 col-md-6 d-flex align-items-stretch mt-4" data-aos="zoom-in" data-aos-delay="300">
-        <div class="icon-box">
-          <div class="icon"><i class="bx bx-arch"></i></div>
-          <h4><a href="">Divera don</a></h4>
-          <p>Modi nostrum vel laborum. Porro fugit error sit minus sapiente sit aspernatur</p>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</section><!-- End Services Section -->
 
 {% endblock %}
