@@ -1,0 +1,21 @@
+
+
+<form action="{{ url_for('renter_add_address') }}" method="POST">
+  <label for="address">Address:</label><br>
+  <textarea id="address" name="address" rows="4" cols="50" required></textarea><br>
+
+  <label for="state">State:</label><br>
+  <input type="text" id="state" name="state" required><br>
+
+  <label for="city">City:</label><br>
+  <input type="text" id="city" name="city" required><br>
+
+
+  <label for="zip_code">Zip Code:</label><br>
+  <input type="text" id="zip_code" name="zip_code" required><br>
+
+  <button type="submit">Create Address</button>
+</form>
+
+
+

@@ -50,9 +50,9 @@
           <li><a class="nav-link scrollto active" href="#hero">!Home</a></li>
 
           <li><a class="nav-link scrollto" href= "#">View Bookings</a></li>
-          <li><a class="nav-link scrollto" href="#services">Update Settings</a></li>
+          <li><a class="nav-link scrollto" href="{{ url_for('renter_profile') }}">Profile</a></li>
           <li><a class="nav-link scrollto " href="#portfolio">Search</a></li>
-          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+          <li><a class="nav-link scrollto" href="#">Credit Card!</a></li>
           <li class="dropdown"><a href="#"><span>Drop Down</span> <i class="bi bi-chevron-down"></i></a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
@@ -75,7 +75,7 @@
         <i class="bi bi-list mobile-nav-toggle"></i>
       </nav><!-- .navbar -->
 
-      <div><a href="login" class="get-started-btn scrollto"> ="{{ url_for('login') }} </a><a href="signup" class="get-started-btn scrollto"> {{ url_for('signup') }}</a></div>
+      <div><a href="login" class="get-started-btn scrollto"> = {{ url_for('logout') }} </a> </div>
 
     </div>
   </header><!-- End Header -->

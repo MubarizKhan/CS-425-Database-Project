@@ -333,8 +333,42 @@ def insert_neighborhood():
 ##########################################
 
 
+@app.route('/renter_profile')
+def renter_profile():
+  print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
+  print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
 
+  return render_template('renter_profile.html')
 
+@app.route('/renter_add_address', methods=['get'])
+def renter_add_address():
+  print('in renter adddd addressssss')
+  return render_template('renter_add_address.html')
+
+@app.route('/renter_add_address',methods=['POST'])
+def renter_insert_address():
+  print('hryy we in insert add addresssss')
+
+  if request.method == 'POST':
+    conn = get_db_connection()
+    cur = conn.cursor()
+    # Retrieve user_id from session
+    user_id = session['user_id']
+    # Retrieve data from the form
+    address = request.form['address']
+    state = request.form['state']
+    city = request.form['city']
+    zip_code = request.form['zip_code']
+
+    cur.execute('INSERT INTO address (user_id, address, state, city, zip_code) VALUES (%s, %s, %s, %s, %s)',
+                  (user_id, address, state, city, zip_code))
+    conn.commit()
+
+    # Close the database connection
+    conn.close()
+
+    # Redirect to the user's profile page
+    return redirect(url_for('renter_add_address'))
 
 
 
