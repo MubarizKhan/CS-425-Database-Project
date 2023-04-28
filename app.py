@@ -232,15 +232,12 @@ def insert_neighborhood():
 
 
 # @app.route('/propety_index', methods=['get'])
-# def properties():
-    # print('in proooooooooooooppppppppppppppertieeeeeeeeeeesssssssss')
-    # conn = get_db_connection()
-    # # psycopg2.connect(database='your_database_name', user='your_database_user', password='your_database_password', host='localhost', port='5432')
-    # cur = conn.cursor()
-    # cur.execute('SELECT * FROM property')
-    # properties = cur.fetchall()
-    # conn.close()
-    # return render_template('property_index.html', properties=properties)
+@app.route('/modify_property/<int:id>', methods=['GET', 'POST'])
+def modify_property(id):
+    # Your code here
+    print('its hitting' * 10)
+    return render_template('modify_property.html')
+
 
 
 

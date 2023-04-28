@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'property_view.html' %}
 
 {% block content %}
   <h1>All Properties</h1>
@@ -14,19 +14,20 @@
       <th>Price</th>
       <th>Availability</th>
       <th>Neighborhood ID</th>
+
     </tr>
     {% for property in properties %}
       <tr>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
-        <td>{{ property[0] }}</td>
+        <td><a href="{{ url_for('modify_property', id=property[0]) }}">{{ property[0] }}</a></td>
+        <td>{{ property[1] }}</td>
+        <td>{{ property[2] }}</td>
+        <td>{{ property[3] }}</td>
+        <td>{{ property[4] }}</td>
+        <td>{{ property[5] }}</td>
+        <td>{{ property[6] }}</td>
+        <td>{{ property[7] }}</td>
+        <td>{{ property[8] }}</td>
+        <td>{{ property[9] }}</td>
       </tr>
     {% endfor %}
   </table>

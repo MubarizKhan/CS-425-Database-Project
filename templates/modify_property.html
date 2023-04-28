@@ -1,0 +1,62 @@
+{% extends 'property_view.html' %}
+
+
+
+{% block content %}
+  <h1>Add Property</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <h1> add property bic </h1>
+
+  <style>
+    label {
+      color: yellow;
+    }
+  </style>
+
+  <form method="post">
+    <label for="type">Type:</label>
+    <input type="text" id="type" name="type" required>
+
+    <label for="location"> location:</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="agent_id"> agent_id:</label>
+    <input type="text" id="agent_id" name="agent_id" required>
+
+    <label for="city">city:</label>
+    <input type="text" id="city" name="city" required>
+
+
+    <label for="state">state:</label>
+    <input type="text" id="state" name="state">
+
+    <label for="description">description:</label>
+    <input type="text" id="description" name="description">
+
+    <label for="price">price:</label>
+    <input type="text" id="price" name="price">
+
+    <label for="availability">availability:</label>
+    <input type="text" id="availability" name="availability">
+
+    <label for="neighborhood_id">neighborhood_id:</label>
+    <input type="text" id="neighborhood_id" name="neighborhood_id">
+
+    <label for="agent_id">agent_id:</label>
+    <input type="text" id="agent_id" name="agent_id">
+
+    <button type="submit">Signup</button>
+  </form>
+
+
+
+{% endblock %}
