@@ -542,8 +542,8 @@ def make_payment(id):
     print(credit_card_id)
     days_of_stay = request.form['days_of_stay']
         # calculate payment_amount
-    payment_amount = price * int(days_of_stay)
-
+    payment_amount = int(property[0][6]) * int(days_of_stay)
+    print(property[0][6], 'hey')
         # # insert data into payment table
         # cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
         #             (payment_status, credit_card_id, renter_id, id, agent_id, today, payment_amount))
