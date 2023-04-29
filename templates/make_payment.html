@@ -17,6 +17,11 @@
 			<option value="paid">Paid</option>
 			<option value="unpaid">Unpaid</option>
 		</select>
+
+		<label for="desired_move_in_date">Desired Move-in Date:</label>
+  <input type="date" id="desired_move_in_date" name="desired_move_in_date" required><br>
+
+
 		<br><br>
 		<label for="credit_card_id">Credit Card:</label>
 		<select name="credit_card_id" id="credit_card_id">
@@ -25,6 +30,17 @@
 			{% endfor %}
 		</select>
 		<br><br>
+
+		<br><br>
+		<label for="address_id">address_id:</label>
+		<select name="address_id" id="address_id">
+			{% for address in addresses %}
+				<option value=" {{ address[0] }} "> {{ address[0] }}  </option>
+			{% endfor %}
+		</select>
+		<br><br>
+
+
 		<label for="days_of_stay">Days of Stay:</label>
 		<input type="number" name="days_of_stay" id="days_of_stay">
 		<br><br>
