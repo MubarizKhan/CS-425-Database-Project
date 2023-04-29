@@ -327,19 +327,19 @@ def insert_neighborhood():
 
 @app.route('/renter_profile')
 def renter_profile():
-  print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
-  print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
+  # print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
+  # print('NOOOOOOOOOOOOOOOOOOOOOONONONNNNNNNNNNNNNNNNNNNNWS')
 
   return render_template('renter_profile.html')
 
 @app.route('/renter_add_address', methods=['get'])
 def renter_add_address():
-  print('in renter adddd addressssss')
+  # print('in renter adddd addressssss')
   return render_template('renter_add_address.html')
 
 @app.route('/renter_add_address',methods=['POST'])
 def renter_insert_address():
-  print('hryy we in insert add addresssss')
+  # print('hryy we in insert add addresssss')
 
   if request.method == 'POST':
     conn = get_db_connection()
@@ -504,6 +504,60 @@ def modify_creditcard(credit_cardid):
       addresses = cur.fetchall()
       return render_template('modify_creditcard.html', creditcard=creditcard, addresses=addresses)
 
+@app.route('/book_property/<int:id>', methods=['GET'])
+def book_property(id):
+  conn = get_db_connection()
+  cur = conn.cursor()
+  # renturn
+  cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'],))
+  renter_id = cur.fetchone()
+
+  cur.execute('SELECT * FROM creditcard WHERE renter_id=%s', (renter_id,))
+  creditcards = cur.fetchall()
+
+  print(creditcards, renter_id)
+  return render_template('make_payment.html', id=id, creditcards=creditcards)
+
+
+  # return render_template('modify_address.html', address=address)
+@app.route('/book_property/<int:id>', methods=['POST'])
+def make_payment(id):
+
+  print('make payment')
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  cur.execute('SELECT * FROM property WHERE property_id=%s', (id, ))
+  property = cur.fetchall()
+
+  cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'], ))
+  renter_id = cur.fetchone()
+
+
+  if request.method == 'POST':
+    print('make payment we gon make it thruuuuuuuuuuuu')
+  #       # get form data
+  #       payment_status = request.form['payment_status']
+    credit_card_id = request.form['credit_card_id']
+    print(credit_card_id)
+    days_of_stay = request.form['days_of_stay']
+        # calculate payment_amount
+    payment_amount = price * int(days_of_stay)
+
+        # # insert data into payment table
+        # cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+        #             (payment_status, credit_card_id, renter_id, id, agent_id, today, payment_amount))
+        # conn.commit()
+  # return redirect(url_for('buyer_index'))
+  # get all credit cards belonging to the current user
+  # print(propertu)
+  print('payment_amount', payment_amount)
+  print('this is property', property)
+  print(days_of_stay, 'days_of_stay')
+  print('this is renter_id' , renter_id)
+
+  # return render_template('make_payment.html')#, id=id, creditcards=creditcards)
+  return redirect(url_for('dummy'))
 
 
 @app.route('/logout')

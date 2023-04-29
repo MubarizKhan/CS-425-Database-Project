@@ -15,7 +15,8 @@
       <th>Price</th>
       <th>Availability</th>
       <th>Neighborhood ID</th>
-      <th>Delete</th>
+
+      <th> Book </th>
 
     </tr>
     {% for property in properties %}
@@ -30,7 +31,11 @@
         <td>{{ property[7] }}</td>
         <td>{{ property[8] }}</td>
         <td>{{ property[9] }}</td>
-        <td><a href="{{ url_for('delete_property', id=property[0]) }}">{{ property[0] }}</a></td>
+
+
+        <td><a href="{{ url_for('book_property', id=property[0]) }}">{{ property[0] }}</a></td>
+
+
       </tr>
     {% endfor %}
   </table>
