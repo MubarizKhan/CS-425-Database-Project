@@ -2,6 +2,7 @@ import os
 import psycopg2
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import date
 import random
 
 
@@ -536,27 +537,45 @@ def make_payment(id):
 
   if request.method == 'POST':
     print('make payment we gon make it thruuuuuuuuuuuu')
-  #       # get form data
-  #       payment_status = request.form['payment_status']
+
+
     credit_card_id = request.form['credit_card_id']
     print(credit_card_id)
     days_of_stay = request.form['days_of_stay']
+
+    today = date.today().strftime('%Y-%m-%d')
+
         # calculate payment_amount
     payment_amount = int(property[0][6]) * int(days_of_stay)
     print(property[0][6], 'hey')
-        # # insert data into payment table
-        # cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-        #             (payment_status, credit_card_id, renter_id, id, agent_id, today, payment_amount))
-        # conn.commit()
-  # return redirect(url_for('buyer_index'))
-  # get all credit cards belonging to the current user
-  # print(propertu)
+    cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                    (False, credit_card_id, renter_id, id, property[0][6], today, payment_amount))
+    conn.commit()
+
+        # update property availability
+    cur.execute('UPDATE property SET availability = %s WHERE property_id = %s', (False, id))
+    conn.commit()
+
+        # update payment status
+    cur.execute('UPDATE payment SET payment_status = %s WHERE propertyid = %s', (True, id))
+    conn.commit()
+
+    # insert data into payment table
+    # if data sucessfully inserted, then update property property_id and change availability to false.
+    #update created payment row by setting payment_status = True.
+
+
+
+    # # insert data into payment table
+    # cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+    #             (payment_status, credit_card_id, renter_id, id, agent_id, today, payment_amount))
+    # conn.commit()
+
   print('payment_amount', payment_amount)
   print('this is property', property)
   print(days_of_stay, 'days_of_stay')
   print('this is renter_id' , renter_id)
 
-  # return render_template('make_payment.html')#, id=id, creditcards=creditcards)
   return redirect(url_for('dummy'))
 
 
