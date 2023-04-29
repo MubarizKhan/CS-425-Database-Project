@@ -1,0 +1,27 @@
+{% extends 'renter_view.html' %}
+
+{% block content %}
+  <h1>All Credit Cards</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Card Number</th>
+        <th>Expiration Date</th>
+        <th>Payment Address</th>
+        <th> MODIFY </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for card in creditcards %}
+        <tr>
+          <td>{{ card[0] }}</td>
+          <td>{{ card[1] }}</td>
+          <td>{{ card[2] }}<br>
+              {{ card[3] }}, {{ card[4] }} {{ card[5] }}</td>
+          <td><a href="{{ url_for('modify_creditcard', credit_cardid=card[0]) }}">{{ card[0] }}</a></td>
+
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

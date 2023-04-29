@@ -78,14 +78,6 @@ def login_post():
 
       else:
         return redirect(url_for('buyer_index'))
-        # session.clear()
-        # session['user_id'] = user[0]
-        # session['user_type'] = user[4]
-        # flash('Already logged in')
-        # return redirect(url_for('index'))
-
-
-
 
 @app.route('/signup', methods=['POST'])
 def signup_post():
@@ -459,23 +451,59 @@ def add_credit_card():
   else:
       return render_template('add_creditcard.html', addresses=addresses)
 
-  # if request.method == 'POST':
-  #   renter_id = db.session.query(Renter.renter_id).filter_by(user_id=session['user_id']).scalar()
-  #   cardnumber = request.form['cardnumber']
-  #   expirationdate = request.form['expirationdate']
-  #   cvv = request.form['cvv']
-  #   paymentaddress_id = request.form['paymentaddress']
 
-  #   credit_card = CreditCard(renter_id=renter_id, cardnumber=cardnumber, expirationdate=expirationdate, cvv=cvv, paymentaddress_id=paymentaddress_id)
+@app.route('/creditcards')
+def creditcards():
+  # renter_id = db.session.query(renters.renter_id).filter_by(user_id=session['user_id']).scalar()
+  # cur = db.cursor()
+  conn = get_db_connection()
+  cur = conn.cursor()
 
-  #   db.session.add(credit_card)
-  #   db.session.commit()
+  cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'],))
+  renter_id = cur.fetchone()
 
-  #   flash('Credit card added successfully')
-  #   return redirect(url_for('renter_profile'))
+  cur.execute('SELECT * FROM creditcard WHERE renter_id=%s', (renter_id,))
+  creditcards = cur.fetchall()
+  cur.close()
+  return render_template('creditcards.html', creditcards=creditcards)
 
-  # addresses = Address.query.filter_by(user_id=session['user_id']).all()
-  # return render_template('add_credit_card.html', addresses=addresses)
+@app.route('/modify_creditcard/<int:credit_cardid>', methods=['POST', 'get'])
+def modify_creditcard(credit_cardid):
+
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  # cur.execute('SELECT renter_id FROM renters WHERE user_id = %s', (session['user_id'] )
+  cur.execute('SELECT renter_id FROM renters WHERE user_id = %s', [session['user_id']])
+
+  renter_id = cur.fetchone()
+
+  cur.execute('SELECT * FROM creditcard WHERE credit_cardid=%s AND renter_id=%s', (credit_cardid, renter_id))
+  creditcard = cur.fetchone()
+
+    # Check if the credit card belongs to the current user
+  if creditcard is None:
+      return "Credit card not found", 404
+    # Check if the request method is POST
+  elif request.method == 'POST':
+    # Retrieve the form data
+    cardnumber = request.form['cardnumber']
+    expirationdate = request.form['expirationdate']
+    paymentaddress_id = request.form['paymentaddress_id']
+    cvv = request.form['cvv']
+    # Update the credit card in the database
+    cur.execute('UPDATE creditcard SET cardnumber=%s, expirationdate=%s, paymentaddress_id=%s, cvv=%s WHERE credit_cardid=%s', (cardnumber, expirationdate, paymentaddress_id, cvv, credit_cardid))
+
+    # cur.execute('UPDATE creditcard SET cardnumber=%s, expirationdate=%s, paymentaddress_id=%s, cvv=%s WHERE credit_cardid=%s', (cardnumber, expirationdate, paymentaddress_id, cvv, credit_cardid))
+    conn.commit()
+    # Redirect to the credit card list page
+    return redirect(url_for('creditcards'))
+    # Otherwise, render the credit card edit form
+  else:
+      cur.execute('SELECT * FROM address WHERE user_id=%s', (session['user_id'],))
+      addresses = cur.fetchall()
+      return render_template('modify_creditcard.html', creditcard=creditcard, addresses=addresses)
+
 
 
 @app.route('/logout')
