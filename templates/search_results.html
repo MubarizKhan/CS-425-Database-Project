@@ -1,10 +1,10 @@
-{% extends 'property_view.html' %}
-
+{% extends 'renter_view.html' %}
 {% block content %}
-  <h1>All Properties</h1>
+
+<h1>Search Results</h1>
   <table>
     <tr>
-
+      <th>ID</th>
       <th>Type</th>
       <th>Location</th>
       <th>Agent ID</th>
@@ -14,14 +14,12 @@
       <th>Price</th>
       <th>Availability</th>
       <th>Neighborhood ID</th>
-      <th>Delete</th>
-      <th>Modify</th>
-      <th> View </th>
+
 
     </tr>
     {% for property in properties %}
       <tr>
-
+        <td>{{ property[0] }}</td>
         <td>{{ property[1] }}</td>
         <td>{{ property[2] }}</td>
         <td>{{ property[3] }}</td>
@@ -31,15 +29,10 @@
         <td>{{ property[7] }}</td>
         <td>{{ property[8] }}</td>
         <td>{{ property[9] }}</td>
-        {% if agent_id == property[9] %}
 
-        <td><a href="{{ url_for('delete_property', id=property[0]) }}">delete</a></td>
-        <td><a href="{{ url_for('modify_property', id=property[0]) }}">Modify</a></td>
-        {% endif %}
-        <td><a href="{{ url_for('view_property', id=property[0]) }}"> View </a>  </td>
       </tr>
     {% endfor %}
   </table>
 
 
-{% endblock %}
+  {% endblock %}

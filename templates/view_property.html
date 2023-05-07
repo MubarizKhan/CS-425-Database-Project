@@ -1,0 +1,56 @@
+{% extends 'property_view.html' %}
+
+{% block content %}
+    <h1>View Property</h1>
+    <table>
+      <tr>
+        <th>Property ID</th>
+        <td>{{ property[0] }}</td>
+      </tr>
+      <tr>
+        <th>Type</th>
+        <td>{{ property[1] }}</td>
+      </tr>
+      <tr>
+        <th>Location</th>
+        <td>{{ property[2] }}</td>
+      </tr>
+      <tr>
+        <th>City</th>
+        <td>{{ property[3] }}</td>
+      </tr>
+      <tr>
+        <th>State</th>
+        <td>{{ property[4] }}</td>
+      </tr>
+      <tr>
+        <th>Description</th>
+        <td>{{ property[5] }}</td>
+      </tr>
+      <tr>
+        <th>Price</th>
+        <td>{{ property[6] }}</td>
+      </tr>
+      <tr>
+        <th>Availability</th>
+        <td>{{ property[7] }}</td>
+      </tr>
+      <tr>
+        <th>Neighborhood ID</th>
+        <td>{{ property[8] }}</td>
+      </tr>
+      <tr>
+        <th>Agent ID</th>
+        <td>{{ property[9] }}</td>
+      </tr>
+
+      {% if agent_id == property[9] %}
+      <tr>
+        <th>View Booking History</th>
+        <td><a href="{{ url_for('view_booking_property', id=property[0]) }}"> View Booking History </a> </td>
+      </tr>
+      {% endif %}
+
+    </table>
+{% endblock %}
+

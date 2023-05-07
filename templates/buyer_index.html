@@ -1,20 +1,30 @@
 {% extends 'renter_view.html' %}
 
+<style>
+  th{
+    color: yellow;
+  }
+
+  .yellow{
+    color: yellow;
+  }
+
+</style>
 
 {% block content %}
-  <h1>All Propertie!!s</h1>
+  <h1 class="yellow">All Propertie!!s</h1>
   <table>
-    <tr>
-      <th>ID</th>
-      <th>Type</th>
-      <th>Location</th>
-      <th>Agent ID</th>
-      <th>City</th>
-      <th>State</th>
-      <th>Description</th>
-      <th>Price</th>
-      <th>Availability</th>
-      <th>Neighborhood ID</th>
+    <tr class="yellow">
+      <th class="yellow">ID</th>
+      <th class="yellow">Type</th>
+      <th class="yellow">Location</th>
+      <th class="yellow">Agent ID</th>
+      <th class="yellow">City</th>
+      <th class="yellow">State</th>
+      <th class="yellow">Description</th>
+      <th class="yellow">Price</th>
+      <th class="yellow">Availability</th>
+      <th class="yellow">Neighborhood ID</th>
 
       <th> Book </th>
 
@@ -33,7 +43,7 @@
         <td>{{ property[9] }}</td>
 
 
-        <td><a href="{{ url_for('book_property', id=property[0]) }}">{{ property[0] }}</a></td>
+        <td><a href="{{ url_for('book_property', id=property[0]) }}"> click to book</a></td>
 
 
       </tr>

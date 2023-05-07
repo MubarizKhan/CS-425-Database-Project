@@ -1,4 +1,6 @@
+{% extends 'renter_view.html' %}
 
+{% block content %}
 
 <form action="{{ url_for('renter_add_address') }}" method="POST">
   <label for="address">Address:</label><br>
@@ -17,5 +19,7 @@
   <button type="submit">Create Address</button>
 </form>
 
+
+{%endblock%}
 
 

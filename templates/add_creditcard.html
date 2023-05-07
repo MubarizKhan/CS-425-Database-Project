@@ -1,3 +1,7 @@
+{% extends 'renter_view.html' %}
+
+{% block content %}
+
 <form method="POST" action="{{ url_for('add_credit_card') }}">
   <label for="cardnumber">Card Number:</label>
   <input type="text" id="cardnumber" name="cardnumber" required>
@@ -17,3 +21,5 @@
 
   <input type="submit" value="Add Credit Card">
 </form>
+
+{% endblock %}

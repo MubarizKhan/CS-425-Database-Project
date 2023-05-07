@@ -43,7 +43,7 @@ def buyer_index():
   return render_template('buyer_index.html', properties=properties)
 
 
-  return render_template('buyer_index.html')
+  # return render_template('buyer_index.html')
 @app.route('/agent_layout')
 def agent_layout():
   return render_template('agent_layout.html')
@@ -87,11 +87,11 @@ def signup_post():
     password = request.form['password']
     user_type = request.form['user_type']
 
-    user_id = random.randint(0,123)
+    user_id = random.randint(0,1230000)
     gen_id = random.randint(0,123)
 
     print('-------')
-    print(name, email, password, type(user_type), user_type)
+    print(name, email, password, type(user_type), user_type, user_id)
     print('======')
 
     conn = get_db_connection()
@@ -108,14 +108,7 @@ def signup_post():
     # password_hash = generate_password_hash(password)
 
     cur.execute('INSERT INTO "User" (user_id, name, email, password, usertype) VALUES (%s, %s, %s, %s, %s)', (user_id, name, email, password, user_type))
-
-
-    if str(user_type) == "agent":
-      real_estate_agency = request.form['real_estate_agency']
-      contact_info = request.form['contact_information']
-      cur.execute('INSERT INTO agents (agent_id, user_id, job_title, real_estate_agency, contact_information, email) VALUES (%s, %s, %s, %s, %s, %s)', (gen_id, user_id, user_type, real_estate_agency, contact_info, email))
-    else:
-      cur.execute('INSERT INTO renters (renter_id, user_id, email) VALUES (%s, %s, %s)', (gen_id, user_id, email))
+    conn.commit()
 
     cur.execute('SELECT user_id FROM "User" WHERE email = %s', (email,))
     user_id = cur.fetchone()[0]
@@ -123,8 +116,57 @@ def signup_post():
     session.clear()
     session['user_id'] = user_id
 
-    conn.commit()
-    return redirect(url_for('index'))
+    if str(user_type) == "agent":
+      real_estate_agency = request.form['real_estate_agency']
+      contact_info = request.form['contact_information']
+      cur.execute('INSERT INTO agents (agent_id, user_id, job_title, real_estate_agency, contact_information, email) VALUES (%s, %s, %s, %s, %s, %s)', (gen_id, user_id, user_type, real_estate_agency, contact_info, email))
+      conn.commit()
+      return redirect(url_for('property_index'))
+
+    else:
+      cur.execute('INSERT INTO renters (renter_id, user_id, email) VALUES (%s, %s, %s)', (gen_id, user_id, email))
+      conn.commit()
+      return redirect(url_for('buyer_index'))
+
+
+    # conn.commit()
+
+    # cur = conn.cursor()
+
+    # # cur.execute("SELECT user_id FROM "User" WHERE email = %s", (email,))
+    # cur.execute('SELECT user_id, password, name, email, usertype FROM "User" WHERE email = %s', (email,))
+    # existing_user = cur.fetchone()
+
+    # if existing_user is not None:
+    #     flash('Email address already in use.')
+    #     return redirect(url_for('signup'))
+
+    # # password_hash = generate_password_hash(password)
+
+    # cur.execute('INSERT INTO "User" (user_id, name, email, password, usertype) VALUES (%s, %s, %s, %s, %s)', (user_id, name, email, password, user_type))
+
+    # # session.clear()
+
+    # cur.execute('SELECT user_id FROM "User" WHERE email = %s', (email,))
+    # user_id = cur.fetchone()[0]
+    # session['user_id'] = user_id
+
+    # if str(user_type) == "agent":
+    #   real_estate_agency = request.form['real_estate_agency']
+    #   contact_info = request.form['contact_information']
+    #   cur.execute('INSERT INTO agents (agent_id, user_id, job_title, real_estate_agency, contact_information, email) VALUES (%s, %s, %s, %s, %s, %s)', (gen_id, user_id, user_type, real_estate_agency, contact_info, email))
+    #   conn.commit()
+    #   return redirect(url_for('property_index'))
+    # else:
+    #   cur.execute('INSERT INTO renters (renter_id, user_id, email) VALUES (%s, %s, %s)', (gen_id, user_id, email))
+    #   return redirect(url_for('buyer_index'))
+
+
+    # session.clear()
+    # session['user_id'] = user_id
+
+
+
 
 ############################ ##############
 ##########################################
@@ -158,14 +200,24 @@ def show_properties():
 @app.route('/property_index')
 def property_index():
     print('in proooooooooooooppppppppppppppertieeeeeeeeeeesssssssss')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT agent_id FROM agents WHERE user_id=%s', (session['user_id'],))
+    agent_id = cur.fetchone()
+
+    print(type(agent_id[0]), 'hurrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr')
+
+
+
     properties = show_properties()
-    return render_template('property_index.html', properties=properties)
+    print(properties)
+    return render_template('property_index.html', properties=properties, agent_id=agent_id[0])
 
 
 
 @app.route('/add_property')
 def add_property():
-  print('*L' * 10)
   return render_template('add_property.html')
 
 @app.route('/add_property', methods=['POST'])
@@ -176,13 +228,16 @@ def insert_property():
     try:
         property_type = request.form['type']
         location = request.form['location']
-        agent_id = request.form['agent_id']
+        # agent_id = request.form['agent_id']
         city = request.form['city']
         state = request.form['state']
         description = request.form['description']
         price = request.form['price']
         availability = request.form['availability']
         neighborhood_id = request.form['neighborhood_id']
+
+        cur.execute('SELECT agent_id FROM agents WHERE user_id=%s', (session['user_id'],))
+        agent_id = cur.fetchone()
 
         # Execute the INSERT statement to add the new property to the database
         cur.execute(
@@ -202,13 +257,63 @@ def insert_property():
     finally:
         cur.close()
 
-    return redirect(url_for('agent_layout'))
+    return redirect(url_for('property_index'))
+
+@app.route('/view_property/<int:id>', methods=['GET', 'POST'])
+def view_property(id):
+  print('hi', id)
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  cur.execute("SELECT * FROM property WHERE property_id = %s", (id,))
+  property = cur.fetchone()
+
+  cur.execute('SELECT agent_id FROM agents WHERE user_id=%s', (session['user_id'],))
+  agent_id = cur.fetchone()[0]
+
+  print(property, 'yo baby')
+
+  return render_template('view_property.html', property=property, agent_id=agent_id)
+
+
+@app.route('/view_booking_property/<int:id>', methods=['GET', 'POST'])
+def view_booking_property(id):
+    conn = get_db_connection()
+    cur = conn.cursor()
+    cur.execute('SELECT agent_id FROM agents WHERE user_id=%s', (session['user_id'],))
+    agent_id = cur.fetchone()[0]
+
+    cur.execute('SELECT * FROM propertybooking WHERE propertyid=%s', (id,))
+    bookings = cur.fetchall()
+
+    print(bookings, 'this is boooooo..........///////oooooooooooookings',agent_id)
+    # if agent_id == bookings[7]:
+    return render_template('view_booking_history.html', bookings=bookings)
+    # else:
+    #     return render_template('error.html', message='You do not have permission to view this booking history.')
+
+@app.route('/delete_booking_agent/<int:propertybookingid>', methods=['GET', 'POST'] )
+def delete_booking_agent(propertybookingid):
+  try:
+      conn = get_db_connection()
+      cur = conn.cursor()
+      cur.execute("DELETE FROM propertybooking WHERE propertybookingid = %s", (propertybookingid,))
+      conn.commit()
+      print("Booking deleted successfully.")
+  except psycopg2.Error as e:
+      print("Error deleting booking:", e)
+  finally:
+      cur.close()
+      conn.close()
+
+  return redirect(url_for('property_index'))
+
+
 
 
 @app.route('/modify_property/<int:id>', methods=['GET', 'POST'])
 def modify_property(id):
-    # Your code here
-    print('its hitting' * 10)
+
     conn = get_db_connection()
     cur = conn.cursor()
 
@@ -265,6 +370,7 @@ def delete_property(id):
       cur.execute('DELETE FROM property WHERE property_id=%s', (id,))
       conn.commit()
       flash('Property deleted successfully!', 'success')
+      return redirect(url_for('property_index'))
   except Exception as e:
       conn.rollback()
       flash('Error occurred while deleting property', 'error')
@@ -361,7 +467,7 @@ def renter_insert_address():
     conn.close()
 
     # Redirect to the user's profile page
-    return redirect(url_for('renter_add_address'))
+    return redirect(url_for('buyer_index'))
 
 @app.route('/all_renters_addresses', methods=['GET', 'POST'])
 def all_renters_addresses():
@@ -463,10 +569,24 @@ def creditcards():
   cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'],))
   renter_id = cur.fetchone()
 
+
   cur.execute('SELECT * FROM creditcard WHERE renter_id=%s', (renter_id,))
   creditcards = cur.fetchall()
   cur.close()
   return render_template('creditcards.html', creditcards=creditcards)
+
+
+@app.route('/delete_creditcard/<int:credit_cardid>', methods=['POST', 'get'])
+def delete_creditcard(credit_cardid):
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  cur.execute('DELETE FROM creditcard WHERE credit_cardid = %s', (credit_cardid,))
+  conn.commit()
+  flash('Credit Card deleted successfully!', 'success')
+  conn.close()
+  # return redirect(url_for('show_addresses'))
+  return redirect(url_for('renter_profile'))
 
 @app.route('/modify_creditcard/<int:credit_cardid>', methods=['POST', 'get'])
 def modify_creditcard(credit_cardid):
@@ -516,8 +636,11 @@ def book_property(id):
   cur.execute('SELECT * FROM creditcard WHERE renter_id=%s', (renter_id,))
   creditcards = cur.fetchall()
 
+  cur.execute('SELECT * FROM address WHERE user_id=%s', (session['user_id'], ))
+  addresses = cur.fetchall()
+
   print(creditcards, renter_id)
-  return render_template('make_payment.html', id=id, creditcards=creditcards)
+  return render_template('make_payment.html', id=id, creditcards=creditcards, addresses=addresses)
 
 
   # return render_template('modify_address.html', address=address)
@@ -529,54 +652,136 @@ def make_payment(id):
   cur = conn.cursor()
 
   cur.execute('SELECT * FROM property WHERE property_id=%s', (id, ))
-  property = cur.fetchall()
+  property = cur.fetchone()
 
   cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'], ))
   renter_id = cur.fetchone()
 
+
+  print(property)
 
   if request.method == 'POST':
     print('make payment we gon make it thruuuuuuuuuuuu')
 
 
     credit_card_id = request.form['credit_card_id']
-    print(credit_card_id)
+    # print(credit_card_id)
     days_of_stay = request.form['days_of_stay']
 
     today = date.today().strftime('%Y-%m-%d')
 
-        # calculate payment_amount
-    payment_amount = int(property[0][6]) * int(days_of_stay)
-    print(property[0][6], 'hey')
+    address = request.form['address_id']
+    # calculate payment_amount
+    payment_amount = int(property[6]) * int(days_of_stay)
+    print(property[6], 'hey')
+    print(property)
+
     cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-                    (False, credit_card_id, renter_id, id, property[0][6], today, payment_amount))
+                    (False, credit_card_id, renter_id, id, property[9], today, payment_amount))
     conn.commit()
 
-        # update property availability
+    address = request.form['address_id']
+    desired_move_in_date = request.form['desired_move_in_date']
+
+    # cur.execute('INSERT INTO propertybooking(renter_id, propertyid, creditcardid, desired_move_in_date, billingaddress_id, budget, agentid) VALUES (%s, %s, %s, %s, %s, %s)',
+                    # (renter_id, id, credit_card_id, desired_move_in_date, address, payment_amount,property[8]))
+    cur.execute('INSERT INTO propertybooking(renter_id, propertyid, creditcardid, desired_move_in_date, billingaddress_id, budget, agentid) VALUES (%s, %s, %s, %s, %s, %s, %s)',
+                    (renter_id, id, credit_card_id, desired_move_in_date, address, payment_amount,property[9]))
+
+    conn.commit()
+
+    # update property availability
     cur.execute('UPDATE property SET availability = %s WHERE property_id = %s', (False, id))
     conn.commit()
 
-        # update payment status
+    # update payment status
     cur.execute('UPDATE payment SET payment_status = %s WHERE propertyid = %s', (True, id))
     conn.commit()
 
-    # insert data into payment table
-    # if data sucessfully inserted, then update property property_id and change availability to false.
-    #update created payment row by setting payment_status = True.
 
-
-
-    # # insert data into payment table
-    # cur.execute('INSERT INTO payment(payment_status, credit_card_id, renter_id, propertyid, agent_id, date, payment_amount) VALUES (%s, %s, %s, %s, %s, %s, %s)',
-    #             (payment_status, credit_card_id, renter_id, id, agent_id, today, payment_amount))
-    # conn.commit()
-
-  print('payment_amount', payment_amount)
+  print('payment_amount', payment_amount, address, desired_move_in_date, 'heyyyyyyyyyyyyyyyyyyyyyy' )
   print('this is property', property)
   print(days_of_stay, 'days_of_stay')
   print('this is renter_id' , renter_id)
 
-  return redirect(url_for('dummy'))
+  return redirect(url_for('buyer_index'))
+
+
+@app.route('/search')
+def search():
+  print('in search')
+  return render_template('search.html');
+
+@app.route('/search_property',  methods=['post'])
+def search_property():
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  # if request.method == 'post' or 'get':
+  print('dekh le tu, aajazi ye meri')
+#        # Get search criteria from the form
+  print(len(request.form))
+  print(request.form['location'])
+
+  location = request.form['location']
+  # date = request.form['date']
+  # availability = request.form['availability']
+  # min_bedrooms = request.form['min_bedrooms']
+  # max_price = request.form['max_price']
+  # property_type = request.form['property_type']
+  # order_by = request.form['order_by']
+
+  print(request.form['date'])
+  print(request.form['min_price'])
+  # print(min_bedrooms)
+  # print(max_price)
+  # print(property_type, 'lplplplpl')
+  # print(order_by)
+
+  cur = conn.cursor()
+  # cur.execute('UPDATE payment SET payment_status = %s WHERE propertyid = %s', (True, id))
+
+  # cur.execute('SELECT * FROM property where city=%s', location)
+  cur.execute('SELECT * FROM property WHERE city=%s', (location,))
+
+  properties = cur.fetchall()
+  # print('location', sql)
+  print(properties)
+
+  return render_template('search_results.html', properties=properties)
+
+@app.route('/mybooking')
+def mybooking():
+  conn = get_db_connection()
+  cur = conn.cursor()
+
+  cur.execute('SELECT renter_id FROM renters WHERE user_id=%s', (session['user_id'],))
+  renter_id = cur.fetchone()
+
+  cur.execute('SELECT * FROM propertybooking WHERE renter_id = %s', (renter_id,))
+  bookings = cur.fetchall()
+
+  print(bookings)
+  return render_template('mybooking.html', bookings=bookings)
+
+
+
+@app.route('/deletebooking/<int:propertybookingid>', methods=['GET', 'POST'] )
+def delete_booking(propertybookingid):
+  try:
+      conn = get_db_connection()
+      cur = conn.cursor()
+      cur.execute("DELETE FROM propertybooking WHERE propertybookingid = %s", (propertybookingid,))
+      conn.commit()
+      print("Booking deleted successfully.")
+  except psycopg2.Error as e:
+      print("Error deleting booking:", e)
+  finally:
+      cur.close()
+      conn.close()
+
+  return redirect(url_for('mybooking'))
+
 
 
 @app.route('/logout')

@@ -1,0 +1,51 @@
+{% extends 'renter_view.html' %}
+
+{% block content %}
+<html>
+  <head>
+    <title>Property Search</title>
+  </head>
+  <body>
+    <h1>Property Search</h1>
+    <form method="POST" action="{{ url_for('search_property') }}">
+
+      <label for="location">Location:</label>
+      <input type="text" name="location" required><br>
+      <label for="date">Date:</label>
+
+      <input type="date" name="date" required><br>
+      <label for="type">Property Type:</label>
+
+      <select name="type">
+        <option value="">Any</option>
+        <option value="apartment">Apartment</option>
+        <option value="house">House</option>
+        <!-- add more options for other property types -->
+      </select><br>
+      <label for="price_range">Price Range:</label>
+      <input type="number" name="min_price" placeholder="Min" step="1000">
+      <input type="number" name="max_price" placeholder="Max" step="1000"><br>
+      <label for="bedrooms">Number of Bedrooms:</label>
+
+      <select name="bedrooms">
+        <option value="">Any</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <!-- add more options for higher numbers of bedrooms -->
+      </select><br>
+
+      <label for="sort">Sort By:</label>
+      <select name="sort">
+        <option value="price">Price</option>
+        <option value="bedrooms">Number of Bedrooms</option>
+      </select><br>
+      <button type="submit">Search</button>
+
+    </form>
+  </body>
+</html>
+
+
+{% endblock %}

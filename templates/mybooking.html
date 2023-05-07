@@ -1,0 +1,36 @@
+{% extends 'renter_view.html' %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Bookings</title>
+</head>
+<body>
+  <h1>My Bookings</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>Booking ID</th>
+        <th>Property ID</th>
+        <th>Desired Move-in Date</th>
+        <th>Budget</th>
+        <th>cancel booking</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for booking in bookings %}
+      <tr>
+        <td>{{ booking[0] }}</td>
+        <td>{{ booking[1] }}</td>
+        <td>{{ booking[2] }}</td>
+        <td>{{ booking[3] }}</td>
+        <td>{{ booking[6] }}</td>
+        <td><a href="{{ url_for('delete_booking', propertybookingid=booking[0]) }}"> Cancel booking</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>
+{% endblock %}

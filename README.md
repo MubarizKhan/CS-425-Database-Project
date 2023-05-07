@@ -113,3 +113,4 @@ test2=# -- Remove the NOT NULL constraint on the "name" column in the "renters" 
 ALTER TABLE renters ALTER COLUMN rental_preferences DROP NOT NULL;
 ALTER TABLE
 
+ALTER TABLE payment DROP CONSTRAINT payment_credit_card_id_key;
