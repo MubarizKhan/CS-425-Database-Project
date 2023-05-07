@@ -323,13 +323,16 @@ def modify_property(id):
     if request.method == 'POST':
           property_type = request.form['type']
           location = request.form['location']
-          agent_id = id
+          # agent_id = id
           city = request.form['city']
           state = request.form['state']
           description = request.form['description']
           price = request.form['price']
           availability = request.form['availability']
           neighborhood_id = request.form['neighborhood_id']
+
+          cur.execute('SELECT agent_id FROM agents WHERE user_id=%s', (session['user_id'],))
+          agent_id = cur.fetchone()[0]
 
           try:
 
@@ -544,7 +547,8 @@ def add_credit_card():
         renter_id = cur.fetchone()
 
         # cur.execute('SELECT paymentaddress_id FROM renters WHERE renter_id = %s', (session['user_id'],))
-        payment_address_id = request.form['paymentaddress_id'][0] #cur.fetchone()[0]
+        payment_address_id = request.form['paymentaddress_id'] #cur.fetchone()[0]
+
         print('we in add_credit_card_post@', payment_address_id, cvv, expiration_date)
 
         # Insert the credit card details into the database

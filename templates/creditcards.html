@@ -9,15 +9,15 @@
         <th>Expiration Date</th>
         <th>Payment Address</th>
         <th> MODIFY </th>
+        <th> delete </th>
       </tr>
     </thead>
     <tbody>
       {% for card in creditcards %}
         <tr>
-          <td>{{ card[0] }}</td>
-          <td>{{ card[1] }}</td>
-          <td>{{ card[2] }}<br>
-              {{ card[3] }}, {{ card[4] }} {{ card[5] }}</td>
+          <td>{{ card[2] }}</td>
+          <td>{{ card[3] }}</td>
+          <td>{{ card[4] }}</td>
           <td><a href="{{ url_for('modify_creditcard', credit_cardid=card[0]) }}">Modify</a></td>
 
           <td><a href="{{ url_for('delete_creditcard', credit_cardid=card[0]) }}"> Delete</a></td>
